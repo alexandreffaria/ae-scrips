@@ -31,19 +31,18 @@ if (comp && comp instanceof CompItem && comp.selectedLayers.length > 0) {
   var scale = scaleProp.value;
   var currentOrient = orientProp.value;
 
-  // Helper Function: Apply Circ In/Out Easing
-  function applyCircEase(prop, keyIndex) {
+  // Helper Function: Apply Spatial Circ In/Out Easing (Requires EXACTLY 1 element array)
+  function applySpatialCircEase(prop, keyIndex) {
     var easeIn = new KeyframeEase(0, 85); // 0 speed, 85% influence
     var easeOut = new KeyframeEase(0, 85);
-    var easeArray = [easeIn, easeIn, easeIn]; // X, Y, Z dimensions
-    var outArray = [easeOut, easeOut, easeOut];
 
     prop.setInterpolationTypeAtKey(
       keyIndex,
       KeyframeInterpolationType.BEZIER,
       KeyframeInterpolationType.BEZIER,
     );
-    prop.setTemporalEaseAtKey(keyIndex, easeArray, outArray);
+    // Spatial properties strictly require a 1-element array
+    prop.setTemporalEaseAtKey(keyIndex, [easeIn], [easeOut]);
   }
 
   // 2. Measure the layer boundaries
@@ -60,27 +59,27 @@ if (comp && comp instanceof CompItem && comp.selectedLayers.length > 0) {
   while (posProp.numKeys > 0) posProp.removeKey(1);
   while (orientProp.numKeys > 0) orientProp.removeKey(1);
 
-  // 5. Set Position Keyframes & Apply Easing
+  // 5. Set Position Keyframes & Apply Spatial Easing
   posProp.setValueAtTime(t0, [offScreenLeftX, currentPos[1], currentPos[2]]);
   posProp.setValueAtTime(t20, currentPos);
   posProp.setValueAtTime(t40, currentPos);
   posProp.setValueAtTime(t60, [offScreenRightX, currentPos[1], currentPos[2]]);
 
-  applyCircEase(posProp, 1);
-  applyCircEase(posProp, 2);
-  applyCircEase(posProp, 3);
-  applyCircEase(posProp, 4);
+  applySpatialCircEase(posProp, 1);
+  applySpatialCircEase(posProp, 2);
+  applySpatialCircEase(posProp, 3);
+  applySpatialCircEase(posProp, 4);
 
-  // 6. Set Orientation Keyframes (Y-Axis Swing) & Apply Easing
+  // 6. Set Orientation Keyframes (Y-Axis Swing) & Apply Spatial Easing
   orientProp.setValueAtTime(t0, [currentOrient[0], 340, currentOrient[2]]);
   orientProp.setValueAtTime(t20, [currentOrient[0], 360, currentOrient[2]]);
   orientProp.setValueAtTime(t40, [currentOrient[0], 360, currentOrient[2]]);
   orientProp.setValueAtTime(t60, [currentOrient[0], 20, currentOrient[2]]);
 
-  applyCircEase(orientProp, 1);
-  applyCircEase(orientProp, 2);
-  applyCircEase(orientProp, 3);
-  applyCircEase(orientProp, 4);
+  applySpatialCircEase(orientProp, 1);
+  applySpatialCircEase(orientProp, 2);
+  applySpatialCircEase(orientProp, 3);
+  applySpatialCircEase(orientProp, 4);
 } else {
   alert("Please select a layer first!");
 }
