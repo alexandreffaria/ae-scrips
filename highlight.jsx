@@ -1,4 +1,4 @@
-app.beginUndoGroup("Eased Relative Split & Trimmed Outro");
+app.beginUndoGroup("Eased Relative Split & Trimmed Outro (Difference)");
 
 var comp = app.project.activeItem;
 
@@ -80,7 +80,7 @@ if (comp && comp instanceof CompItem && comp.selectedLayers.length > 0) {
 
   roughen.property("Edge Type").setValue(2);
   roughen.property("Edge Color").setValue([0, 0, 0.8]);
-  roughen.property("Border").setValue(75);
+  roughen.property("Border").setValue(50);
   roughen.property("Edge Sharpness").setValue(10);
   roughen.property("Fractal Influence").setValue(0.35);
   roughen.property("Scale").setValue(100);
@@ -131,6 +131,12 @@ if (comp && comp instanceof CompItem && comp.selectedLayers.length > 0) {
   scaleProp2.setValueAtTime(t60, [0, targetScaleY, targetScaleZ]);
   applyCircEase(scaleProp2, 1);
   applyCircEase(scaleProp2, 2);
+
+  // ==========================================
+  // PART 4: BLEND MODES
+  // ==========================================
+  layer1.blendingMode = BlendingMode.DIFFERENCE;
+  layer2.blendingMode = BlendingMode.DIFFERENCE;
 } else {
   alert("Please select a layer first!");
 }
